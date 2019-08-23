@@ -12,10 +12,13 @@
         android:layout_height="match_parent" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:text="Capture"
         android:onClick="Capture"
-        android:textAllCaps="false"/>
+        android:drawableBottom="@android:color/transparent"
+        android:background="@drawable/selector_capture_button"
+        android:textAllCaps="false"
+        android:padding="1dp"
+        android:layout_marginBottom="10dp"/>
 </FrameLayout>

@@ -7,6 +7,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import com.pecuyu.customcamera.Utils;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class CameraPreview implements SurfaceHolder.Callback {
 					@Override
 					public void onPreviewFrame(byte[] data, Camera camera) {
 						isPreviewed = true;
-						Log.e(TAG, "onPreviewFrame isPreviewed=" + isPreviewed);
+						if (Utils.DEBUG) Log.d(TAG, "onPreviewFrame isPreviewed=" + isPreviewed);
 					}
 				});
 				mCamera.setPreviewDisplay(mHolder);
@@ -97,8 +99,6 @@ public class CameraPreview implements SurfaceHolder.Callback {
 					Log.e(TAG, "previewWidth=" + previewWidth + " ,previewHeight=" + previewHeight);
 					Log.e(TAG, "mScreenWidth=" + mScreenWidth + " ,mScreenHeight=" + mScreenHeight);
 					mCamera.setParameters(parameters);// params 赋给摄像头
-
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
