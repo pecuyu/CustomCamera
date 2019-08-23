@@ -1,14 +1,8 @@
 package com.pecuyu.customcamera;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.hardware.Camera;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,17 +14,10 @@ import android.view.View;
 import com.pecuyu.customcamera.camera.CameraController;
 import com.pecuyu.customcamera.camera.CameraPreview;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-import static android.graphics.ImageFormat.JPEG;
-
-public class MainActivity extends AppCompatActivity {
-	private static final String TAG = MainActivity.class.getSimpleName();
+public class CameraActivity extends AppCompatActivity {
+	private static final String TAG = CameraActivity.class.getSimpleName();
 	private SurfaceView mSurfaceView;
 	private CameraPreview mCameraPreview;
 	private Camera mCamera;
@@ -40,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 
 		mSurfaceView = findViewById(R.id.id_preview);
 
