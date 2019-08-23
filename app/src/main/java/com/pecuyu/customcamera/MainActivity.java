@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.graphics.ImageFormat.JPEG;
@@ -42,13 +43,26 @@ public class MainActivity extends AppCompatActivity {
 
 
 		mSurfaceView = findViewById(R.id.id_preview);
-		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
-		} else {
+
+		requestPermissionsIfNeeded();
+	}
+
+	private void requestPermissionsIfNeeded() {
+		boolean cameraPermReq = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED;
+		boolean storagePermReq = ActivityCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED;
+		if (!cameraPermReq) {
 			prepareCamera();
 		}
-		if (ActivityCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+		ArrayList<String> perms = new ArrayList<>();
+		if (cameraPermReq) perms.add(Manifest.permission.CAMERA);
+		if (storagePermReq){
+			perms.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+			perms.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		}
+
+		if (!perms.isEmpty()) {
+			ActivityCompat.requestPermissions(this, perms.toArray(new String[perms.size()]), 1);
 		}
 	}
 
