@@ -1,7 +1,10 @@
 package com.pecuyu.customcamera.camera;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -47,8 +50,11 @@ public class CameraController {
 							null, new Camera.PictureCallback() {
 						@Override
 						public void onPictureTaken(byte[] data, Camera camera) {
-							handlePictureTaken(data, camera);
-							callback.onPictureTaken(data, camera);
+							String path = handlePictureTaken(data, camera);
+							if (callback != null) callback.onPictureTaken(data, camera);
+							if (path != null) {
+								broadcastNewPicture(mContext,path);
+							}
 						}
 					});
 				}
@@ -56,20 +62,54 @@ public class CameraController {
 		}
 	}
 
-	private void handlePictureTaken(byte[] data, Camera camera) {
-		Log.e(TAG, "onPictureTaken");
+	private void broadcastNewPicture(final Context context, String filePath) {
 		try {
-			FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-					"/" + Environment.DIRECTORY_DCIM, System.currentTimeMillis() + ".jpeg"));
+			File file = new File(filePath);
+			MediaScannerConnection.scanFile(context,			//insert picture data into database
+				new String[] { file.getAbsolutePath() }, null,
+				new MediaScannerConnection.OnScanCompletedListener() {
+					@Override
+					public void onScanCompleted(String path, Uri uri) {
+						Log.v(TAG, "onScanCompleted() file " + path
+								+ " was scanned seccessfully\n uri: " + uri);
+						if (uri != null) {
+							broadcastNewPicture(context, uri);  /// 广播通知有新图片
+						}
+					}
+				});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void broadcastNewPicture(Context context, Uri uri) {
+		context.sendBroadcast(new Intent(
+				android.hardware.Camera.ACTION_NEW_PICTURE, uri));
+		context.sendBroadcast(new Intent("com.android.camera.NEW_PICTURE", uri));
+	}
+
+
+	private String handlePictureTaken(byte[] data, Camera camera) {
+		Log.e(TAG, "onPictureTaken");
+		String path = null;
+		try {
+			File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
+					File.separator + Environment.DIRECTORY_DCIM, System.currentTimeMillis() + ".jpeg");
+			path = file.getAbsolutePath();
+			FileOutputStream fos = new FileOutputStream(file);
 			fos.write(data);
 			fos.close();
 		} catch (FileNotFoundException e) {
+			path = null;
 			e.printStackTrace();
 		} catch (IOException e) {
+			path = null;
 			e.printStackTrace();
 		}finally {
 			mPreview.afterPictureTaken();
 		}
+
+		return path;
 	}
 
 	public void stopCamera() {

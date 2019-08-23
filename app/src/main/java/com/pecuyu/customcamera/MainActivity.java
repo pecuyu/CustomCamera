@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.hardware.Camera;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -22,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import static android.graphics.ImageFormat.JPEG;
 
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private void prepareCamera() {
 		if (mCameraController == null) {
-			mCameraController = new CameraController(this, mSurfaceView.getHolder());
+			mCameraController = new CameraController(getApplicationContext(), mSurfaceView.getHolder());
 			mCameraController.start();
 		}
 	}
@@ -93,45 +96,7 @@ public class MainActivity extends AppCompatActivity {
 		return camera;
 	}
 
-	private BroadcastReceiver receiver=new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.e(TAG, "onReceive=" + intent.getAction());
-
-		}
-	};
-
 	public void Capture(View view) {
-		/*if (mCamera != null) {
-			Camera.Parameters parameters = mCamera.getParameters();
-			if (parameters != null) {
-				parameters.setPreviewFormat(JPEG);
-			}
-			mCamera.takePicture(new Camera.ShutterCallback() {
-				@Override
-				public void onShutter() {
-					Log.e(TAG, "onShutter");
-				}
-			}, null,null, new Camera.PictureCallback() {
-				@Override
-				public void onPictureTaken(byte[] data, Camera camera) {
-					Log.e(TAG, "onPictureTaken");
-					try {
-						FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-								"/" + Environment.DIRECTORY_DCIM, System.currentTimeMillis() + ".jpeg"));
-						fos.write(data);
-						fos.close();
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}finally {
-						mCameraPreview.afterPictureTaken();
-					}
-				}
-			});
-		}*/
-
 		mCameraController.takePicture(new Camera.PictureCallback() {
 			@Override
 			public void onPictureTaken(byte[] data, Camera camera) {
