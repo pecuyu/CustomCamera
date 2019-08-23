@@ -11,27 +11,39 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.pecuyu.customcamera.camera.CameraController;
 import com.pecuyu.customcamera.camera.CameraPreview;
 
 import java.util.ArrayList;
 
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity implements View.OnClickListener {
 	private static final String TAG = CameraActivity.class.getSimpleName();
 	private SurfaceView mSurfaceView;
 	private CameraPreview mCameraPreview;
 	private Camera mCamera;
 	private CameraController mCameraController;
+	private ImageView mGallery;
+	private ImageView mCapture;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mSurfaceView = findViewById(R.id.id_preview);
-
+		initViews();
 		requestPermissionsIfNeeded();
+	}
+
+	private void initViews() {
+		mSurfaceView = findViewById(R.id.id_preview);
+		mGallery = findViewById(R.id.id_gallery);
+		mCapture = findViewById(R.id.id_capture);
+
+		mGallery.setOnClickListener(this);
+		mCapture.setOnClickListener(this);
+		mCapture.requestFocus();
 	}
 
 	private void requestPermissionsIfNeeded() {
@@ -97,12 +109,25 @@ public class CameraActivity extends AppCompatActivity {
 		return camera;
 	}
 
-	public void Capture(View view) {
-		mCameraController.takePicture(new Camera.PictureCallback() {
-			@Override
-			public void onPictureTaken(byte[] data, Camera camera) {
 
-			}
-		});
+	/**
+	 * Called when a view has been clicked.
+	 *
+	 * @param v The view that was clicked.
+	 */
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.id_capture:
+				mCameraController.takePicture(new Camera.PictureCallback() {
+					@Override
+					public void onPictureTaken(byte[] data, Camera camera) {
+
+					}
+				});
+				break;
+			case R.id.id_gallery:
+				break;
+		}
 	}
 }

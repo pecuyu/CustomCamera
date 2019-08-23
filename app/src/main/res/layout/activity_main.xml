@@ -11,14 +11,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:onClick="Capture"
-        android:drawableBottom="@android:color/transparent"
-        android:background="@drawable/selector_capture_button"
-        android:textAllCaps="false"
-        android:padding="1dp"
-        android:layout_marginBottom="10dp"/>
+        android:background="@color/light_black"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/id_gallery"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/shape_gallery_empty" />
+
+        <ImageView
+            android:id="@+id/id_capture"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:drawableBottom="@android:color/transparent"
+            android:background="@drawable/selector_capture_button"
+            android:textAllCaps="false"
+            android:padding="1dp" />
+
+    </RelativeLayout>
 </FrameLayout>
